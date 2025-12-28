@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.log
+venv/
+.venv/
+input.wav
+output.wav
+dictation_input.wav
+1
+*.pid

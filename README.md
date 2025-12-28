@@ -58,6 +58,6 @@ bindr = SUPER, V, exec, /path/to/hyprscribe/stop_dictation.sh
 
 ## Documentation
 
-*   [**Server Setup Guide**](SERVER_README.md): Detailed instructions on the GLM-ASR model and GPU setup.
-*   [**Standalone Dictation**](DICTATION_GUIDE.md): How to use the simpler, non-server version (Whisper only).
-*   [**Full Assistant Mode**](local_voice_assistant/README.md): (Legacy) The original conversation mode with Ollama.
+*   [**Server Setup Guide**](docs/SERVER_README.md): Detailed instructions on the GLM-ASR model and GPU setup.
+*   [**Standalone Dictation**](docs/DICTATION_GUIDE.md): How to use the simpler, non-server version (Whisper only).
+*   [**Hyprland Configuration**](docs/HYPRLAND_GUIDE.md): Advanced keybinding setup.
