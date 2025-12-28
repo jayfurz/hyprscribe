@@ -1,47 +1,63 @@
-# Local Voice Assistant
+# HyprScribe
 
-This is a fully local voice assistant integrating **Faster Whisper** (STT), **Ollama** (LLM), and **Piper** (TTS).
+**HyprScribe** is a blazing fast, private, and local voice dictation tool designed for Linux (specifically Hyprland/Wayland). It allows you to press a key, speak, and have the text instantly typed into your active window.
 
-## Prerequisites
+It features a **Client-Server Architecture**:
+*   **Server**: Runs the powerful `GLM-ASR-Nano` or `Whisper` model on your GPU (always loaded in VRAM).
+*   **Client**: A lightweight script triggered by your hotkey for instant recording and response.
 
-1.  **Python 3.10+**
-2.  **Ollama**: Installed and running.
-    *   Install: `curl -fsSL https://ollama.com/install.sh | sh`
-    *   Pull model: `ollama pull llama3` (or your preferred model)
-    *   Serve: `ollama serve`
-3.  **Piper TTS**: You need the Piper executable and a voice model.
-    *   Download Piper: https://github.com/rhasspy/piper/releases
-    *   Extract to a folder named `piper` inside this directory (or update the path in arguments).
-    *   Download a voice model (ONNX + JSON): https://github.com/rhasspy/piper/blob/master/VOICES.md
-    *   Example: `en_US-lessac-medium.onnx` and `en_US-lessac-medium.onnx.json`
-    *   Place them in the `piper/` folder.
-4.  **System Dependencies** (Ubuntu/Debian):
-    ```bash
-    sudo apt-get install python3-dev portaudio19-dev libasound2-dev
-    ```
+## Quick Start
 
-## Installation
+### 1. Installation
 
+Clone the repo:
 ```bash
-pip install -r requirements.txt
+git clone git@github.com:jayfurz/hyprscribe.git
+cd hyprscribe
 ```
 
-## Usage
-
-Ensure Ollama is running (`ollama serve`). Then run:
-
+Install dependencies (using `uv` is recommended):
 ```bash
-python main.py
+# For the server (GPU/AI)
+uv pip install -r requirements_server.txt
+
+# For the client (Recording/Typing)
+uv pip install -r requirements.txt
+
+# System dependencies
+sudo apt install wtype portaudio19-dev
 ```
 
-### Arguments
+### 2. Start the Server
 
-*   `--model`: Ollama model name (default: `llama3`)
-*   `--whisper`: Whisper model size (default: `base`). Options: `tiny`, `base`, `small`, `medium`, `large-v3`.
-*   `--piper`: Path to piper executable (default: `./piper/piper`)
-*   `--voice`: Path to voice model (default: `./piper/en_US-lessac-medium.onnx`)
+This runs the AI model. Keep this running in a background terminal.
 
-## Troubleshooting
+```bash
+./start_server.sh
+```
 
-*   **PortAudio Error**: If `pip install sounddevice` fails, ensure you installed `portaudio19-dev`.
-*   **Piper not found**: Ensure the path to the `piper` binary is correct and executable (`chmod +x piper/piper`).
+### 3. Configure Hyprland
+
+Add this to your `~/.config/hypr/hyprland.conf` to enable **Push-to-Talk**:
+
+```ini
+# Start recording when pressed
+bind = SUPER, V, exec, /path/to/hyprscribe/start_dictation.sh
+
+# Stop recording and Type when released
+bindr = SUPER, V, exec, /path/to/hyprscribe/stop_dictation.sh
+```
+
+### 4. Usage
+
+1.  Focus on any text input (Terminal, VS Code, Browser).
+2.  **Hold Super + V**.
+3.  Speak your mind.
+4.  **Release**.
+5.  Watch the text appear instantly.
+
+## Documentation
+
+*   [**Server Setup Guide**](SERVER_README.md): Detailed instructions on the GLM-ASR model and GPU setup.
+*   [**Standalone Dictation**](DICTATION_GUIDE.md): How to use the simpler, non-server version (Whisper only).
+*   [**Full Assistant Mode**](local_voice_assistant/README.md): (Legacy) The original conversation mode with Ollama.
